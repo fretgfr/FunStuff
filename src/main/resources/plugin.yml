@@ -1,0 +1,6 @@
+name: FunStuff
+version: '${project.version}'
+main: funstuff.funstuff.FunStuff
+api-version: 1.17
+authors: [ Razgro ]
+description: A plugin with some funny things
