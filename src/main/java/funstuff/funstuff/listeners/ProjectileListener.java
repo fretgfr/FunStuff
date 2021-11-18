@@ -17,8 +17,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import java.util.HashMap;
 
 public class ProjectileListener implements Listener {
-    private final BlockSafety blockSafety = new BlockSafety();
-    private final FunStuff main;
+    private FunStuff main;
 
     public ProjectileListener(FunStuff main) {
         this.main = main;
@@ -49,7 +48,7 @@ public class ProjectileListener implements Listener {
                 Player player = arrowShooters.get(e.getEntity().getEntityId());
                 try {
                     Block block = e.getHitBlock();
-                    if(blockSafety.isBlockSafe(block)) {
+                    if(BlockSafety.isBlockSafe(block)) {
                         Location location = block.getLocation().add(0,1,0);
                         location.setDirection(player.getLocation().getDirection());
                         player.teleport(location);
