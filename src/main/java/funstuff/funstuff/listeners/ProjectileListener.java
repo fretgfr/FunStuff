@@ -17,7 +17,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import java.util.HashMap;
 
 public class ProjectileListener implements Listener {
-    private FunStuff main;
+    private final FunStuff main;
 
     public ProjectileListener(FunStuff main) {
         this.main = main;
@@ -31,32 +31,34 @@ public class ProjectileListener implements Listener {
     public void onArrowShoot(EntityShootBowEvent e) {
         if (e.getEntity() instanceof Player) {
             Player player = (Player) e.getEntity();
-            Arrow arrow = (Arrow) e.getProjectile();
-            ArrowLaunchRunnable runnable = new ArrowLaunchRunnable(arrow, main);
-            arrowIds.put(arrow.getEntityId(), runnable.getTaskId());
-            arrowShooters.put(arrow.getEntityId(), player);
+            if(player.getItemInUse().getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', "&aTeleporting Bow"))){
+                Arrow arrow = (Arrow) e.getProjectile();
+                ArrowLaunchRunnable runnable = new ArrowLaunchRunnable(arrow, main);
+                arrowIds.put(arrow.getEntityId(), runnable.getTaskId());
+                arrowShooters.put(arrow.getEntityId(), player);
+            }
         }
     }
 
     @EventHandler
     public void onProjectileLand(ProjectileHitEvent e) {
-        if(e.getEntity() instanceof Arrow) {
-            if(arrowIds.containsKey(e.getEntity().getEntityId())) {
+        if (e.getEntity() instanceof Arrow) {
+            if (arrowIds.containsKey(e.getEntity().getEntityId())) {
                 Bukkit.getScheduler().cancelTask(arrowIds.get(e.getEntity().getEntityId()));
             }
-            if(arrowShooters.containsKey(e.getEntity().getEntityId())) {
+            if (arrowShooters.containsKey(e.getEntity().getEntityId())) {
                 Player player = arrowShooters.get(e.getEntity().getEntityId());
                 try {
                     Block block = e.getHitBlock();
-                    if(BlockSafety.isBlockSafe(block)) {
-                        Location location = block.getLocation().add(0,1,0);
+                    if (BlockSafety.isBlockSafe(block)) {
+                        Location location = block.getLocation().add(0, 1, 0);
                         location.setDirection(player.getLocation().getDirection());
                         player.teleport(location);
                         player.setLastDamage(0);
                     } else {
                         player.sendMessage(ChatColor.RED + "Unsafe location.");
                     }
-                } catch(NullPointerException exception) {
+                } catch (NullPointerException exception) {
                     player.teleport(e.getHitEntity());
                     player.setLastDamage(0);
                 }

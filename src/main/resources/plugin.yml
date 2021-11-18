@@ -4,3 +4,9 @@ main: funstuff.funstuff.FunStuff
 api-version: 1.17
 authors: [ Razgro ]
 description: A plugin with some funny things
+commands:
+  telebow:
+    usage: /<command>
+    aliases:
+      - tbow
+    description: Gives you a bow that teleports you around.
